@@ -1,4 +1,5 @@
-{% set ver="6.10.0" %}
+{% set ver = "6.10.0" %}
+{% set qwt_ver = "6.3.1" %}
 
 {% if mkspec == "win32-g++" %}
 {% set subdir = "mingw_64" %}
@@ -10,7 +11,6 @@
 
 def mingw
     {% if mkspec == "win32-g++" %}
-    add_path(C:\mingw1310_64\bin)
     if_exist_return(C:\mingw1310_64\bin\gcc.exe)
     download(https://github.com/brechtsanders/winlibs_mingw/releases/download/13.1.0-16.0.5-11.0.0-ucrt-r5/winlibs-x86_64-posix-seh-gcc-13.1.0-mingw-w64ucrt-11.0.0-r5.7z, :cache, :v)
     7z rn winlibs-x86_64-posix-seh-gcc-13.1.0-mingw-w64ucrt-11.0.0-r5.7z mingw64 mingw1310_64
@@ -58,9 +58,9 @@ def build
 
 def main depends on mingw qt source build
     github_checkout()
-    zip(Qwt-6.3.1-Qt-{{ver}}-{{compiler}}.7z, C:\Qwt-6.3.1-Qt-{{ver}})
-    github_upload(C:\Qwt-6.3.1-Qt-{{ver}})
-    github_release(Qwt-6.3.1-Qt-{{ver}}-{{compiler}}.7z)
+    zip(Qwt-{{qwt_ver}}-Qt-{{ver}}-{{compiler}}.7z, C:\Qwt-{{qwt_ver}}-Qt-{{ver}})
+    github_upload(C:\Qwt-{{qwt_ver}}-Qt-{{ver}})
+    github_release(Qwt-{{qwt_ver}}-Qt-{{ver}}-{{compiler}}.7z)
 
 github-workflow 1
 env-policy 1

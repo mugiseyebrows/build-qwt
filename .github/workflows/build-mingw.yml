@@ -9,7 +9,7 @@ jobs:
     - name: mingw
       shell: cmd
       run: |
-        set PATH=C:\mingw1310_64\bin;C:\Program Files\7-Zip;%PATH%
+        set PATH=C:\Program Files\7-Zip;%PATH%
         if exist C:\mingw1310_64\bin\gcc.exe goto mingw_end
         if not exist winlibs-x86_64-posix-seh-gcc-13.1.0-mingw-w64ucrt-11.0.0-r5.7z (
             echo downloading winlibs-x86_64-posix-seh-gcc-13.1.0-mingw-w64ucrt-11.0.0-r5.7z
