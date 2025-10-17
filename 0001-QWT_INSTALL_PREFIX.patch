@@ -1,0 +1,26 @@
+From 0def143be0c3cc84c4ddef5ef8ade0a6105098eb Mon Sep 17 00:00:00 2001
+From: Doronin Stanislav <mugisbrows@gmail.com>
+Date: Tue, 4 Feb 2025 15:49:05 +0300
+Subject: [PATCH] QWT_INSTALL_PREFIX
+
+---
+ qwtconfig.pri | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/qwtconfig.pri b/qwtconfig.pri
+index 81ef079..b36d0b2 100644
+--- a/qwtconfig.pri
++++ b/qwtconfig.pri
+@@ -24,8 +24,7 @@ unix {
+ }
+ 
+ win32 {
+-    QWT_INSTALL_PREFIX    = C:/Qwt-$$QWT_VERSION-dev
+-    # QWT_INSTALL_PREFIX = C:/Qwt-$$QWT_VERSION-dev-qt-$$QT_VERSION
++    QWT_INSTALL_PREFIX = C:/Qwt-$$QWT_VERSION-Qt-$$QT_VERSION
+ }
+ 
+ QWT_INSTALL_DOCS      = $${QWT_INSTALL_PREFIX}/doc
+-- 
+2.45.2.windows.1
+

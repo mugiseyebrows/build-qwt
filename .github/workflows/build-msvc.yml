@@ -1,0 +1,47 @@
+name: main
+on: push
+jobs:
+  main:
+    runs-on: windows-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+    - name: mingw
+      shell: cmd
+      run: echo 1
+    - name: qt
+      shell: cmd
+      run: |
+        set PATH=C:\Program Files\7-Zip;%PATH%
+        if exist C:\Qt\6.10.0\msvc2020_64\bin\qmake.exe goto qt_end
+        if not exist Qt-6.10.0-msvc2020.7z (
+            echo downloading Qt-6.10.0-msvc2020.7z
+            curl -L -o Qt-6.10.0-msvc2020.7z https://github.com/mugiseyebrows/build-qt/releases/download/6.10.0/Qt-6.10.0-msvc2020.7z
+        )
+        7z x -y -oC:\Qt\6.10.0 Qt-6.10.0-msvc2020.7z
+        :qt_end
+    - name: source
+      shell: cmd
+      run: |
+        set PATH=C:\Program Files\Git\cmd;%PATH%
+        if exist "C:\Program Files\Git\usr\bin\patch.exe" set PATCH=C:\Program Files\Git\usr\bin\patch.exe
+        if not defined PATCH (
+        echo PATCH not found
+        exit /b
+        )
+        set PATCH=C:\Program Files\Git\usr\bin\patch.exe
+        if not exist qwt git clone -b qwt-6.3 https://git.code.sf.net/p/qwt/git qwt
+        pushd qwt
+            "%PATCH%" -N -i ../0001-QWT_INSTALL_PREFIX.patch
+            "%PATCH%" -N -i ../0001-no-examples.patch
+        popd
+    - name: build
+      shell: cmd
+      run: |
+        set PATH=C:\Qt\6.10.0\msvc2020_64\bin;C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build;%PATH%
+        call vcvars64.bat
+        pushd qwt
+            qmake
+            nmake
+            nmake install
+        popd

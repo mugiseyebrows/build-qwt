@@ -1,0 +1,44 @@
+
+
+
+
+
+
+def mingw
+    
+    echo 1
+    
+
+def qt
+    if_exist_return(C:\Qt\6.10.0\msvc2020_64\bin\qmake.exe)
+    
+    download(https://github.com/mugiseyebrows/build-qt/releases/download/6.10.0/Qt-6.10.0-msvc2020.7z, :cache, :v)
+    unzip(Qt-6.10.0-msvc2020.7z, :o=C:\Qt\6.10.0)
+    
+    
+def source
+    set PATCH=C:\Program Files\Git\usr\bin\patch.exe
+    git_clone(https://git.code.sf.net/p/qwt/git, qwt, :ref=qwt-6.3)
+    pushd qwt
+        patch(../0001-QWT_INSTALL_PREFIX.patch, :N)
+        patch(../0001-no-examples.patch, :N)
+    popd
+
+def build
+    add_path(C:\Qt\6.10.0\msvc2020_64\bin)
+    
+    call_vcvars()
+    
+    pushd qwt
+        qmake
+        
+        nmake
+        nmake install
+        
+    popd
+
+def main depends on mingw qt source build
+    github_checkout()
+
+github-workflow 1
+env-policy 1

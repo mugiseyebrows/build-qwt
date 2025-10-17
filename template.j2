@@ -1,0 +1,58 @@
+{% set ver="6.10.0" %}
+
+{% if mkspec == "win32-g++" %}
+{% set subdir = "mingw_64" %}
+{% else %}
+{% set subdir = "msvc2020_64" %}
+{% endif %}
+
+def mingw
+    {% if mkspec == "win32-g++" %}
+    add_path(C:\mingw1310_64\bin)
+    if_exist_return(C:\mingw1310_64\bin\gcc.exe)
+    download(https://github.com/brechtsanders/winlibs_mingw/releases/download/13.1.0-16.0.5-11.0.0-ucrt-r5/winlibs-x86_64-posix-seh-gcc-13.1.0-mingw-w64ucrt-11.0.0-r5.7z, :cache, :v)
+    7z rn winlibs-x86_64-posix-seh-gcc-13.1.0-mingw-w64ucrt-11.0.0-r5.7z mingw64 mingw1310_64
+    unzip(winlibs-x86_64-posix-seh-gcc-13.1.0-mingw-w64ucrt-11.0.0-r5.7z, :t=C:\mingw1310_64\bin\gcc.exe, :o=C:\)
+    {% else %}
+    echo 1
+    {% endif %}
+
+def qt
+    if_exist_return(C:\Qt\{{ver}}\{{subdir}}\bin\qmake.exe)
+    {% if mkspec == "win32-g++" %}
+    download(https://github.com/mugiseyebrows/build-qt/releases/download/6.10.0/Qt-6.10.0-mingw13.7z, :cache, :v)
+    unzip(Qt-6.10.0-mingw13.7z, :o=C:\Qt\{{ver}})
+    {% else %}
+    download(https://github.com/mugiseyebrows/build-qt/releases/download/6.10.0/Qt-6.10.0-msvc2020.7z, :cache, :v)
+    unzip(Qt-6.10.0-msvc2020.7z, :o=C:\Qt\{{ver}})
+    {% endif %}
+    
+def source
+    set PATCH=C:\Program Files\Git\usr\bin\patch.exe
+    git_clone(https://git.code.sf.net/p/qwt/git, qwt, :ref=qwt-6.3)
+    pushd qwt
+        patch(../0001-QWT_INSTALL_PREFIX.patch, :N)
+        patch(../0001-no-examples.patch, :N)
+    popd
+
+def build
+    add_path(C:\Qt\{{ver}}\{{subdir}}\bin)
+    {% if mkspec != "win32-g++" %}
+    call_vcvars()
+    {% endif %}
+    pushd qwt
+        qmake
+        {% if mkspec == "win32-g++" %}
+        mingw32-make
+        mingw32-make install
+        {% else %}
+        nmake
+        nmake install
+        {% endif %}
+    popd
+
+def main depends on mingw qt source build
+    github_checkout()
+
+github-workflow 1
+env-policy 1

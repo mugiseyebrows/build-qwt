@@ -1,0 +1,35 @@
+@echo off
+rem This file is generated from build-msvc.pbat, all edits will be lost
+set PATH=C:\Program Files\7-Zip;C:\Program Files\Git\cmd;C:\Qt\6.10.0\msvc2020_64\bin;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build;%PATH%
+if exist "C:\Program Files\Git\usr\bin\patch.exe" set PATCH=C:\Program Files\Git\usr\bin\patch.exe
+if not defined PATCH (
+echo PATCH not found
+exit /b
+)
+if exist "C:\Program Files\Git\mingw32\bin\curl.exe" set CURL=C:\Program Files\Git\mingw32\bin\curl.exe
+if exist "C:\Program Files\Git\mingw64\bin\curl.exe" set CURL=C:\Program Files\Git\mingw64\bin\curl.exe
+if exist "C:\Windows\System32\curl.exe" set CURL=C:\Windows\System32\curl.exe
+if not defined CURL (
+echo CURL not found
+exit /b
+)
+echo 1
+if exist C:\Qt\6.10.0\msvc2020_64\bin\qmake.exe goto qt_end
+if not exist Qt-6.10.0-msvc2020.7z (
+    echo downloading Qt-6.10.0-msvc2020.7z
+    "%CURL%" -L -o Qt-6.10.0-msvc2020.7z https://github.com/mugiseyebrows/build-qt/releases/download/6.10.0/Qt-6.10.0-msvc2020.7z
+)
+7z x -y -oC:\Qt\6.10.0 Qt-6.10.0-msvc2020.7z
+:qt_end
+set PATCH=C:\Program Files\Git\usr\bin\patch.exe
+if not exist qwt git clone -b qwt-6.3 https://git.code.sf.net/p/qwt/git qwt
+pushd qwt
+    "%PATCH%" -N -i ../0001-QWT_INSTALL_PREFIX.patch
+    "%PATCH%" -N -i ../0001-no-examples.patch
+popd
+call vcvars64.bat
+pushd qwt
+    qmake
+    nmake
+    nmake install
+popd
