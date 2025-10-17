@@ -48,7 +48,7 @@ jobs:
     - name: build
       shell: cmd
       run: |
-        set PATH=C:\Qt\6.10.0\mingw_64\bin;%PATH%
+        set PATH=C:\Qt\6.10.0\mingw_64\bin;C:\mingw1310_64\bin;%PATH%
         pushd qwt
             qmake
             mingw32-make

@@ -40,7 +40,9 @@ def source
 
 def build
     add_path(C:\Qt\{{ver}}\{{subdir}}\bin)
-    {% if mkspec != "win32-g++" %}
+    {% if mkspec == "win32-g++" %}
+    add_path(C:\mingw1310_64\bin)
+    {% else %}
     call_vcvars()
     {% endif %}
     pushd qwt

@@ -33,6 +33,8 @@ def source
 def build
     add_path(C:\Qt\6.10.0\mingw_64\bin)
     
+    add_path(C:\mingw1310_64\bin)
+    
     pushd qwt
         qmake
         
