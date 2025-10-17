@@ -1,4 +1,4 @@
-name: main
+name: build-msvc2020
 on: push
 jobs:
   main:
@@ -34,6 +34,7 @@ jobs:
         pushd qwt
             "%PATCH%" -N -i ../0001-QWT_INSTALL_PREFIX.patch
             "%PATCH%" -N -i ../0001-no-examples.patch
+            "%PATCH%" -N -i ../0001-release-build.patch
         popd
     - name: build
       shell: cmd
@@ -45,3 +46,18 @@ jobs:
             nmake
             nmake install
         popd
+    - name: main
+      shell: cmd
+      run: |
+        set PATH=C:\Program Files\7-Zip;%PATH%
+        7z a -y Qwt-6.3.1-Qt-6.10.0-msvc2020.7z C:\Qwt-6.3.1-Qt-6.10.0
+    - name: upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: Qwt-6.3.1-Qt-6.10.0
+        path: C:\Qwt-6.3.1-Qt-6.10.0
+    - name: release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: Qwt-6.3.1-Qt-6.10.0-msvc2020.7z

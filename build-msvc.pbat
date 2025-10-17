@@ -4,6 +4,7 @@
 
 
 
+
 def mingw
     
     echo 1
@@ -22,6 +23,7 @@ def source
     pushd qwt
         patch(../0001-QWT_INSTALL_PREFIX.patch, :N)
         patch(../0001-no-examples.patch, :N)
+        patch(../0001-release-build.patch, :N)
     popd
 
 def build
@@ -39,6 +41,10 @@ def build
 
 def main depends on mingw qt source build
     github_checkout()
+    zip(Qwt-6.3.1-Qt-6.10.0-msvc2020.7z, C:\Qwt-6.3.1-Qt-6.10.0)
+    github_upload(C:\Qwt-6.3.1-Qt-6.10.0)
+    github_release(Qwt-6.3.1-Qt-6.10.0-msvc2020.7z)
 
 github-workflow 1
 env-policy 1
+workflow-name build-msvc2020

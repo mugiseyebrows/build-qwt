@@ -33,9 +33,11 @@ if not exist qwt git clone -b qwt-6.3 https://git.code.sf.net/p/qwt/git qwt
 pushd qwt
     "%PATCH%" -N -i ../0001-QWT_INSTALL_PREFIX.patch
     "%PATCH%" -N -i ../0001-no-examples.patch
+    "%PATCH%" -N -i ../0001-release-build.patch
 popd
 pushd qwt
     qmake
     mingw32-make
     mingw32-make install
 popd
+7z a -y Qwt-6.3.1-Qt-6.10.0-mingw13.7z C:\Qwt-6.3.1-Qt-6.10.0
