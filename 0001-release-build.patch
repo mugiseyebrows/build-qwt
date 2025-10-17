@@ -1,0 +1,26 @@
+From cf2708404ecb0a772f0690970e782497ab6dfdc6 Mon Sep 17 00:00:00 2001
+From: Doronin Stanislav <mugisbrows@gmail.com>
+Date: Fri, 17 Oct 2025 15:16:38 +0300
+Subject: [PATCH] release build
+
+---
+ qwtbuild.pri | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/qwtbuild.pri b/qwtbuild.pri
+index c83f693..2b90ca4 100644
+--- a/qwtbuild.pri
++++ b/qwtbuild.pri
+@@ -53,8 +53,7 @@ win32 {
+     # might need a debug version.
+     # Enable debug_and_release + build_all if you want to build both.
+ 
+-    CONFIG           += debug_and_release
+-    CONFIG           += build_all
++    CONFIG           += release
+ }
+ else {
+ 
+-- 
+2.47.1.windows.1
+
